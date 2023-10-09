@@ -81,3 +81,29 @@ while True:
                         print(vars)
                         break 
     current_line += 1
+
+# convert to Johny ram
+johny = open(file_path + ".bij", "w")
+
+current_line = 0
+
+while True:
+    code_line = code_lines[current_line].replace("\n","")
+    code_line_split = code_line.split(" ")
+    if len(code_line_split) >= 1:
+        if len(code_line_split[0]) > 0:
+            if code_line_split[0][0] != '#':
+                match code_line_split[0]:    
+                    case "inc":
+                        johny.write("\n")
+                    case "dec":
+                        johny.write("\n")
+                    case "jmp":
+                        johny.write("\n")
+                    case "tst":
+                        johny.write("\n")
+                    case "hlt":
+                        johny.write("\n")
+    current_line += 1
+
+johny.close()
