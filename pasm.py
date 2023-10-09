@@ -1,16 +1,35 @@
 import os
 import sys
 
+johny_line_write_count = 0
+
+def johny_write_line(file, hi, lo):
+    global johny_line_write_count
+    assert len(str(hi)) <= 1
+    lo_len = len(str(lo))
+    file.write(str(hi))
+    for i in range(lo_len, 4):
+        file.write("0")
+    file.write(str(lo))
+    file.write("\n")
+    johny_line_write_count += 1
+
 vars = {}
 
 def add_variable(name, value):
-    vars[name] = int(value)
+    vars[name] = [int(value), int(value), len(vars)]
 
 def set_variable(name, value):
-    vars[name] = int(value)
+    vars[name][0] = int(value)
 
 def get_variable(name):
-    return vars[name]
+    return vars[name][0]
+
+def get_variable_initial_value(name):
+    return vars[name][1]
+
+def get_variable_index(name):
+    return vars[name][2]
 
 if(len(sys.argv) < 2):
     print("Usage : python3 pasm.py <file>")
@@ -83,11 +102,20 @@ while True:
     current_line += 1
 
 # convert to Johny ram
-johny = open(file_path + ".bij", "w")
-
+johny = open(file_path + ".bma", "w")
 current_line = 0
 
+variable_start = 1
+
+johny_write_line(johny, 3, len(vars) + variable_start)
+
+for var in vars:
+    johny_write_line(johny, 0, get_variable_initial_value(var))
+
+
 while True:
+    if current_line == len(code_lines):
+        break
     code_line = code_lines[current_line].replace("\n","")
     code_line_split = code_line.split(" ")
     if len(code_line_split) >= 1:
@@ -95,15 +123,19 @@ while True:
             if code_line_split[0][0] != '#':
                 match code_line_split[0]:    
                     case "inc":
-                        johny.write("\n")
+                        johny_write_line(johny, 1, get_variable_index(code_line_split[1]) + variable_start)
                     case "dec":
-                        johny.write("\n")
+                        johny_write_line(johny, 2, get_variable_index(code_line_split[1]) + variable_start)
                     case "jmp":
-                        johny.write("\n")
+                        johny_write_line(johny, 3, int(code_line_split[1]) - current_line + johny_line_write_count - 1)
                     case "tst":
-                        johny.write("\n")
+                        johny_write_line(johny, 4, get_variable_index(code_line_split[1]) + variable_start)
                     case "hlt":
-                        johny.write("\n")
+                        johny_write_line(johny, 5, 0)
+                    case _:
+                        johny_write_line(johny, 3, johny_line_write_count + 1)
+            else:
+                johny_write_line(johny, 3, johny_line_write_count + 1)
     current_line += 1
 
 johny.close()
