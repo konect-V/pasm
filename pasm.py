@@ -24,6 +24,10 @@ code_file = open(file_path, 'r')
 
 code_lines = code_file.readlines()
 
+log = 0
+
+if len(sys.argv) > 2:
+    log = int(sys.argv[2])
 
 current_line = 0
 
@@ -31,47 +35,49 @@ while True:
     code_line = code_lines[current_line].replace("\n","")
     code_line_split = code_line.split(" ")
     if len(code_line_split) >= 1:
-        match code_line_split[0]:
-            case "var":
-                if len(code_line_split) == 3:
-                    add_variable(code_line_split[1], int(code_line_split[2]))
-                else:
-                    print("Syntax error line : " + str(current_line + 1))      
-            case "inc":
-                set_variable(code_line_split[1], get_variable(code_line_split[1]) + 1)
-            case "dec":
-                set_variable(code_line_split[1], get_variable(code_line_split[1]) - 1)
-            case "print":
-                if len(code_line_split) == 2:
-                    print(get_variable(code_line_split[1]))
-                else:
-                    print("Syntax error line : " + str(current_line + 1))   
-            case "jmp":
-                if len(code_line_split) == 2:
-                    jmp_line = int(code_line_split[1]) - 2
-                    if (jmp_line + 1) <= len(code_lines):
-                        current_line = jmp_line
-                    else:
-                        print("Syntax error line : " + str(current_line + 1))   
-                else:
-                    print("Syntax error line : " + str(current_line + 1))
-            case "tst":
-                if len(code_line_split) == 2:
-                    jmp_line = current_line
-                    if get_variable(code_line_split[1]) == 0:
-                        jmp_line += 1 
+        if len(code_line_split[0]) > 0:
+            if code_line_split[0][0] != '#':
+                if log > 0:
+                    print(code_line_split)
+                    print(vars)
+                match code_line_split[0]:
+                    case "var":
+                        if len(code_line_split) == 3:
+                            add_variable(code_line_split[1], int(code_line_split[2]))
+                        else:
+                            print("Syntax error line : " + str(current_line + 1))      
+                    case "inc":
+                        set_variable(code_line_split[1], get_variable(code_line_split[1]) + 1)
+                    case "dec":
+                        set_variable(code_line_split[1], get_variable(code_line_split[1]) - 1)
+                    case "print":
+                        if len(code_line_split) == 2:
+                            print(get_variable(code_line_split[1]))
+                        else:
+                            print("Syntax error line : " + str(current_line + 1))   
+                    case "jmp":
+                        if len(code_line_split) == 2:
+                            jmp_line = int(code_line_split[1]) - 2
+                            if (jmp_line + 1) <= len(code_lines):
+                                current_line = jmp_line
+                            else:
+                                print("Syntax error line : " + str(current_line + 1))   
+                        else:
+                            print("Syntax error line : " + str(current_line + 1))
+                    case "tst":
+                        if len(code_line_split) == 2:
+                            jmp_line = current_line
+                            if get_variable(code_line_split[1]) == 0:
+                                jmp_line += 1 
 
-                    if jmp_line <= len(code_lines):
-                        current_line = jmp_line
-                    else:
-                        print("Syntax error line : " + str(current_line + 1))   
-                else:
-                    print("Syntax error line : " + str(current_line + 1))
-            case "hlt":
-                print("Program exit") 
-                break 
-
-    else:
-        print("Syntax error line : " + str(current_line + 1))
-        exit(1)
+                            if jmp_line <= len(code_lines):
+                                current_line = jmp_line
+                            else:
+                                print("Syntax error line : " + str(current_line + 1))   
+                        else:
+                            print("Syntax error line : " + str(current_line + 1))
+                    case "hlt":
+                        print("Program exit") 
+                        print(vars)
+                        break 
     current_line += 1

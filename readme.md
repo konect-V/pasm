@@ -18,6 +18,6 @@
 
 ## To execute .pasm file :
 
-`python3 pasm.py <file>`
+`python3 pasm.py <file> <log_level>`
 
-Feel free to use these instructions to debug and analyze your code effectively. Enjoy using **Pseudo Asm**!
+Feel free to use these instructions to debug and analyze your code effectively. Enjoy using **pasm**!
