@@ -1,3 +1,6 @@
+import os
+import sys
+
 vars = {}
 
 def add_variable(name, value):
@@ -9,8 +12,16 @@ def set_variable(name, value):
 def get_variable(name):
     return vars[name]
 
+if(len(sys.argv) < 2):
+    print("Usage : python3 pasm.py <file>")
 
-code_file = open('code.pasm', 'r')
+file_path = sys.argv[1]
+
+if not os.path.exists(file_path) or not os.path.isfile(file_path):
+    print("file not found : " + file_path)
+
+code_file = open(file_path, 'r')
+
 code_lines = code_file.readlines()
 
 
