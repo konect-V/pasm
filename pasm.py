@@ -51,12 +51,17 @@ if len(sys.argv) > 2:
 current_line = 0
 
 while True:
+    if current_line == len(code_lines):
+        print("Syntax error : no 'hlt' found")
+        break
     code_line = code_lines[current_line].replace("\n","")
     code_line_split = code_line.split(" ")
     if len(code_line_split) >= 1:
         if len(code_line_split[0]) > 0:
             if code_line_split[0][0] != '#':
                 if log > 0:
+                    print("---------------------------------")
+                    print(current_line + 1)
                     print(code_line_split)
                     print(vars)
                 match code_line_split[0]:
@@ -80,7 +85,7 @@ while True:
                             if (jmp_line + 1) <= len(code_lines):
                                 current_line = jmp_line
                             else:
-                                print("Syntax error line : " + str(current_line + 1))   
+                                print("Syntax error line : " + str(current_line + 1) + " you tried to jump out of the program")   
                         else:
                             print("Syntax error line : " + str(current_line + 1))
                     case "tst":
